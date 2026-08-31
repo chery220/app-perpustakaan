@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## App Perpustakaan
 Aplikasi manajemen perpustakaan berbasis Laravel 12 yang dirancang untuk mengelola data buku, peminjaman, dan anggota perpustakaan secara efisien.
 
@@ -25,7 +26,5 @@ Fungsi: Menerima permintaan (request) dari pengguna, lalu mengatur alur komunika
 Karakteristik: Mengambil input dari pengguna (melalui View), meminta data ke Model jika diperlukan, lalu mengembalikan hasilnya kembali ke View untuk ditampilkan. 
 Contoh: Saat tombol "Login" ditekan, Controller menerima data tersebut, memerintahkan Model untuk mencocokkan sandi, lalu mengarahkan tampilan ke halaman utama atau pesan error.
 
-<!--
-## Penjelasan MVC
+## Penjelasan MVC menurut Saya
 Model bertugas mengelola data dan logika bisnis aplikasi. View berfungsi menampilkan antarmuka visual kepada pengguna. Controller bertindak sebagai jembatan yang menghubungkan alur antara Model dan View.
---!>
