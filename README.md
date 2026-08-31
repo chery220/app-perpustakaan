@@ -1,59 +1,31 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## App Perpustakaan
+Aplikasi manajemen perpustakaan berbasis Laravel 12 yang dirancang untuk mengelola data buku, peminjaman, dan anggota perpustakaan secara efisien.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Cara Menjalankan Project Secara Lokal
+1. Clone repository ini: git clone https://github.com/chery220/app-perpustakaan.git
+2. Masuk ke folder project: cd app-perpustakaan
+3. Install dependency: composer install
+4. Salin file environment dan atur koneksi database PostgreSQL di .env: cp .env.example .env
+5. Jalankan migrasi database: php artisan migrate
+6. Jalankan server lokal: php artisan serve
 
-## About Laravel
+## Perbedaan Model, View, dan Controller (MVC)
+## Model (Data dan Logika Bisnis)
+Fungsi: Mengatur, menyimpan, mengambil, dan memanipulasi data dari database. Bagian ini juga memuat aturan logika bisnis aplikasi (seperti validasi data atau perhitungan). 
+Karakteristik: Tidak tahu menahu tentang bagaimana data tersebut ditampilkan ke pengguna. 
+Contoh: Skrip yang mengambil data daftar harga produk atau menyimpan data pengguna baru ke database.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## View (Antarmuka Pengguna)
+Fungsi: Menampilkan informasi dan antarmuka (UI) agar bisa dilihat dan dibaca oleh pengguna. 
+Karakteristik: Hanya bertugas menyajikan data dari Model tanpa memproses logika pemrograman atau aturan bisnis. 
+Contoh: Halaman web HTML, tabel, tombol, atau formulir penelusuran.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Controller (Jembatan / Pengatur Alur)
+Fungsi: Menerima permintaan (request) dari pengguna, lalu mengatur alur komunikasi antara Model dan View. 
+Karakteristik: Mengambil input dari pengguna (melalui View), meminta data ke Model jika diperlukan, lalu mengembalikan hasilnya kembali ke View untuk ditampilkan. 
+Contoh: Saat tombol "Login" ditekan, Controller menerima data tersebut, memerintahkan Model untuk mencocokkan sandi, lalu mengarahkan tampilan ke halaman utama atau pesan error.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<!--
+## Penjelasan MVC
+Model bertugas mengelola data dan logika bisnis aplikasi. View berfungsi menampilkan antarmuka visual kepada pengguna. Controller bertindak sebagai jembatan yang menghubungkan alur antara Model dan View.
+--!>
