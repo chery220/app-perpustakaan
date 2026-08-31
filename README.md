@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## App Perpustakaan
 Aplikasi manajemen perpustakaan berbasis Laravel 12 yang dirancang untuk mengelola data buku, peminjaman, dan anggota perpustakaan secara efisien.
 
