@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreMemberRequest; // 1. Impor Request Class
+use App\Http\Requests\StoreMemberRequest;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -36,33 +36,13 @@ class MemberController extends Controller
 
     public function create()
     {
-        // 2. Arahkan ke view form tambah data (members.create)
         return view('members.create');
     }
-    
+
     public function store(StoreMemberRequest $request)
     {
         $validated = $request->validated();
+
         return redirect()->route('members.index')->with('success', 'Anggota berhasil ditambahkan!');
-    }
-
-    public function show(string $id)
-    {
-        return "MemberController@show, id: {$id}";
-    }
-
-    public function edit(string $id)
-    {
-        return "MemberController@edit, id: {$id}";
-    }
-
-    public function update(Request $request, string $id)
-    {
-        return "MemberController@update, id: {$id}";
-    }
-
-    public function destroy(string $id)
-    {
-        return "MemberController@destroy, id: {$id}";
     }
 }
