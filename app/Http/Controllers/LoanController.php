@@ -26,10 +26,9 @@ class LoanController extends Controller
     public function create()
     {
         $members = Member::all();
-        $users = User::all();
-        $books = Book::where('stok', '>', 0)->get();
+        $books = Book::all();
 
-        return view('loans.create', compact('members', 'books', 'users'));
+        return view('loans.create', compact('members', 'books'));
     }
     /**
      * Store a newly created resource in storage.
