@@ -2,12 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
+    use HasFactory;
+
+    protected $fillable = [
+        'judul',
+        'penulis',
+        'penerbit',
+        'tahun_terbit',
+        'isbn',
+        'stok',
+        'sampul',
+        'category_id',
+    ];
+    
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
