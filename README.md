@@ -27,3 +27,10 @@ Contoh: Saat tombol "Login" ditekan, Controller menerima data tersebut, memerint
 
 ## Penjelasan MVC menurut Saya
 Model bertugas mengelola data dan logika bisnis aplikasi. View berfungsi menampilkan antarmuka visual kepada pengguna. Controller bertindak sebagai jembatan yang menghubungkan alur antara Model dan View.
+
+## Cara Instalasi & Setup Project (Local Development)
+
+1. **Clone Repository:**
+   ```bash
+   git clone <url-repository-kamu>
+   con app-perpustakaan
