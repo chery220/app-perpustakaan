@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('nama', 100);
             $table->string('nim', 20)->unique();
             $table->string('email', 100)->unique();
-            $table->string('nomor_telepon', 15);
-            $table->text('alamat');
+            $table->text('alamat')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });

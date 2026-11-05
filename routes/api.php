@@ -5,6 +5,12 @@ use App\Http\Controllers\Api\LoanController;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\StatsController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Loan;
+use Illuminate\Http\Request;
+
+Route::get('/loans', function () {
+    return Loan::with(['member', 'user', 'loanItems.book'])->get();
+});
 
 Route::get('/books', [BookController::class, 'index']);
 Route::get('/books/{id}', [BookController::class, 'show']);

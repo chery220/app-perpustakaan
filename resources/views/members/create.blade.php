@@ -1,63 +1,96 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Anggota</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; max-width: 500px; }
-        label { display: block; margin-top: 12px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
-        .error { color: #b91c1c; font-size: 14px; margin-top: 4px; }
-        .btn { margin-top: 20px; padding: 8px 16px; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <h1>Tambah Anggota</h1>
-    <p><a href="{{ route('members.index') }}">&larr; Kembali ke daftar anggota</a></p>
+@extends('layouts.app')
 
-    <form action="{{ route('members.store') }}" method="POST">
-        @csrf
+@section('content')
+<div class="max-w-3xl mx-auto py-8 px-4 space-y-6">
+    <!-- Header & Tombol Kembali -->
+    <div>
+        <h1 class="text-2xl font-bold text-[#1E4D3B]">Tambah Anggota</h1>
+        <p class="text-stone-600 mt-1">Masukkan data anggota baru perpustakaan.</p>
+        <div class="mt-3">
+            <a href="{{ route('members.index') }}" class="inline-flex items-center text-sm font-medium text-[#1E4D3B] hover:underline">
+                ← Kembali ke daftar anggota
+            </a>
+        </div>
+    </div>
 
-        <label for="nama">Nama</label>
-        <input type="text" name="nama" id="nama" value="{{ old('nama') }}">
-        @error('nama')
-            <div class="error">{{ $message }}</div>
-        @enderror
+    <!-- Form Container -->
+    <div class="bg-white shadow-sm rounded-2xl border border-stone-200 overflow-hidden p-6 sm:p-8">
+        <form action="{{ route('members.store') }}" method="POST" class="space-y-5">
+            @csrf
 
-        <label for="nim">NIM</label>
-        <input type="text" name="nim" id="nim" value="{{ old('nim') }}">
-        @error('nim')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Nama -->
+            <div>
+                <label for="nama" class="block text-sm font-medium text-stone-700 mb-1">Nama Lengkap</label>
+                <input type="text" name="nama" id="nama" value="{{ old('nama') }}" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                @error('nama')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="{{ old('email') }}">
-        @error('email')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- NIM -->
+            <div>
+                <label for="nim" class="block text-sm font-medium text-stone-700 mb-1">NIM</label>
+                <input type="text" name="nim" id="nim" value="{{ old('nim') }}" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                @error('nim')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <label for="nomor_telepon">Nomor Telepon</label>
-        <input type="text" name="nomor_telepon" id="nomor_telepon" value="{{ old('nomor_telepon') }}">
-        @error('nomor_telepon')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Email & Nomor Telepon (Grid 2 Kolom) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-stone-700 mb-1">Email</label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}"
+                        class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                    @error('email')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="telepon" class="block text-sm font-medium text-stone-700 mb-1">Nomor Telepon</label>
+                    <input type="text" name="telepon" id="telepon" value="{{ old('telepon') }}"
+                        class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                    @error('telepon')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
 
-        <label for="alamat">Alamat</label>
-        <textarea name="alamat" id="alamat" rows="3">{{ old('alamat') }}</textarea>
-        @error('alamat')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Alamat -->
+            <div>
+                <label for="alamat" class="block text-sm font-medium text-stone-700 mb-1">Alamat</label>
+                <textarea name="alamat" id="alamat" rows="3"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">{{ old('alamat') }}</textarea>
+                @error('alamat')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <label for="status">Status</label>
-        <select name="status" id="status">
-            <option value="aktif" @selected(old('status', 'aktif') == 'aktif')>Aktif</option>
-            <option value="nonaktif" @selected(old('status') == 'nonaktif')>Nonaktif</option>
-        </select>
-        @error('status')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Status -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-stone-700 mb-1">Status</label>
+                <select name="status" id="status" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm bg-white">
+                    <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="tidak aktif" {{ old('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                </select>
+                @error('status')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <button type="submit" class="btn">Simpan</button>
-    </form>
-</body>
-</html>
+            <!-- Tombol Aksi -->
+            <div class="pt-4 flex items-center justify-end gap-3">
+                <a href="{{ route('members.index') }}" class="px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 font-medium hover:bg-stone-50 transition text-sm">
+                    Batal
+                </a>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#1E4D3B] text-white font-medium hover:bg-[#16382b] transition shadow-sm text-sm">
+                    Simpan Anggota
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

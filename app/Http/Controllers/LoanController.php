@@ -63,8 +63,8 @@ class LoanController extends Controller
             'member_id' => 'required|integer|exists:members,id',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-            'book_ids' => 'required|array|min:1',
-            'book_ids.*' => 'integer|exists:books,id',
+            'books' => 'required|array|min:1',
+            'books*' => 'integer|exists:books,id',
             ]);
 
         $loan = Loan::create([
@@ -75,8 +75,15 @@ class LoanController extends Controller
             'status' => 'dipinjam',
         ]);
 
-        foreach ($validated['book_ids'] as $bookId) {
+        foreach ($validated['books'] as $bookId) {
             $loan->loanItems()->create(['book_id' => $bookId]);
+        }
+
+        // Kurangi stok buku secara otomatis
+        $book = Book::find($bookId);
+        if ($book && $book->stok > 0) {
+            $book->stok -= 1;
+            $book->save();
         }
 
         return redirect()->route('loans.index')
@@ -89,20 +96,20 @@ class LoanController extends Controller
     public function show(string $id)
     {
     $loan = Loan::with(['member', 'user', 'loanItems.book'])->findOrFail($id);
-
     return view('loans.show', compact('loan'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $loan = Loan::with(['member', 'user', 'loanItems.book'])->findOrFail($id);
+        $loan = Loan::with('loanItems')->findOrFail($id);
+        $members = Member::all(); // <-- Pastikan baris ini ada
+        $books = Book::all();     // <-- Pastikan baris ini juga ada
 
-        return view('loans.edit', compact('loan'));
+        return view('loans.edit', compact('loan', 'members', 'books'));
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -137,16 +144,22 @@ class LoanController extends Controller
         ->with('success', 'Transaksi peminjaman berhasil dihapus.');
     }
     
-    public function kembalikan(string $id)
+    public function kembalikan($id)
     {
-        $loan = Loan::findOrFail($id);
+        $loan = Loan::with('loanItems.book')->findOrFail($id);
 
-    // Ubah status dan tanggal dikembalikan
-    $loan->update([
-        'status' => 'dikembalikan',
-        'tanggal_dikembalikan' => now()->toDateString(),
-    ]);
+        // Cek jika sebelumnya belum dikembalikan, kembalikan stok bukunya
+        if (strtolower($loan->status) !== 'dikembalikan') {
+            foreach ($loan->loanItems as $item) {
+                if ($item->book) {
+                    $item->book->stok += 1;
+                    $item->book->save();
+                }
+            }
+            $loan->status = 'dikembalikan';
+            $loan->save();
+        }
 
-    return redirect()->route('loans.index')->with('success', 'Buku berhasil dikembalikan!');
+        return redirect()->route('loans.index')->with('success', 'Buku berhasil dikembalikan dan stok diperbarui!');
     }
-}
+    }

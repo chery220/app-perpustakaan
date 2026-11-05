@@ -1,53 +1,120 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Peminjaman</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; max-width: 500px; }
-        label { display: block; margin-top: 12px; font-weight: bold; }
-        input, select { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
-        .error { color: #b91c1c; font-size: 14px; margin-top: 4px; }
-        .btn { margin-top: 20px; padding: 8px 16px; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-        .readonly { background: #f3f4f6; padding: 8px; border-radius: 4px; margin-top: 4px; }
-    </style>
-</head>
-<body>
-    <h1>Edit Peminjaman</h1>
-    <p><a href="{{ route('loans.index') }}">&larr; Kembali ke daftar peminjaman</a></p>
+@extends('layouts.app')
 
-    <label>Anggota</label>
-    <div class="readonly">{{ $loan['member']['nama'] }} ({{ $loan['member']['nim'] }})</div>
-
-    <label>Buku</label>
-    <div class="readonly">
-        @foreach ($loan['loanItems'] as $item)
-            {{ $item['book']['judul'] }}@if (!$loop->last), @endif
-        @endforeach
+@section('content')
+<div class="max-w-3xl mx-auto py-8 px-4 space-y-6">
+    <!-- Header & Tombol Kembali -->
+    <div>
+        <h1 class="text-2xl font-bold text-[#1E4D3B]">Edit Peminjaman</h1>
+        <p class="text-stone-600 mt-1">Perbarui data transaksi peminjaman buku.</p>
+        <div class="mt-3">
+            <a href="{{ route('loans.index') }}" class="inline-flex items-center text-sm font-medium text-[#1E4D3B] hover:underline">
+                ← Kembali ke daftar peminjaman
+            </a>
+        </div>
     </div>
 
-    <form action="{{ route('loans.update', $loan['id']) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="tanggal_pinjam" value="{{ $loan['tanggal_pinjam'] }}">
+    <!-- Form Container -->
+    <div class="bg-white shadow-sm rounded-2xl border border-stone-200 overflow-hidden p-6 sm:p-8">
+        <form action="{{ route('loans.update', $loan->id) }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-        <label for="tanggal_kembali">Tanggal Kembali</label>
-        <input type="date" name="tanggal_kembali" id="tanggal_kembali" value="{{ old('tanggal_kembali', $loan['tanggal_kembali']) }}">
-        @error('tanggal_kembali')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Anggota -->
+            <div>
+                <label for="member_id" class="block text-sm font-medium text-stone-700 mb-1">Anggota</label>
+                <select name="member_id" id="member_id" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm bg-white">
+                    <option value="">-- Pilih Anggota --</option>
+                    @foreach($members as $member)
+                        <option value="{{ $member->id }}" {{ (old('member_id', $loan->member_id) == $member->id) ? 'selected' : '' }}>
+                            {{ $member->nama }} ({{ $member->nim }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('member_id')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <label for="status">Status</label>
-        <select name="status" id="status">
-            <option value="dipinjam" @selected(old('status', $loan['status']) == 'dipinjam')>Dipinjam</option>
-            <option value="dikembalikan" @selected(old('status', $loan['status']) == 'dikembalikan')>Dikembalikan</option>
-            <option value="terlambat" @selected(old('status', $loan['status']) == 'terlambat')>Terlambat</option>
-        </select>
-        @error('status')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Petugas (Info Otomatis) -->
+            <div>
+                <label class="block text-sm font-medium text-stone-700 mb-1">Petugas Pencatat</label>
+                <div class="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-stone-600 text-sm">
+                    {{ $loan->user->name ?? Auth::user()->name ?? 'Admin PENS' }} <span class="text-xs text-stone-400 italic">(petugas pencatat)</span>
+                </div>
+            </div>
 
-        <button type="submit" class="btn">Perbarui</button>
-    </form>
-</body>
-</html>
+            <!-- Tanggal Pinjam & Tanggal Kembali (Grid 2 Kolom) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="tanggal_pinjam" class="block text-sm font-medium text-stone-700 mb-1">Tanggal Pinjam</label>
+                    <input type="date" name="tanggal_pinjam" id="tanggal_pinjam" value="{{ old('tanggal_pinjam', $loan->tanggal_pinjam) }}" required
+                        class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                    @error('tanggal_pinjam')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="tanggal_kembali" class="block text-sm font-medium text-stone-700 mb-1">Tanggal Kembali</label>
+                    <input type="date" name="tanggal_kembali" id="tanggal_kembali" value="{{ old('tanggal_kembali', $loan->tanggal_kembali) }}" required
+                        class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                    @error('tanggal_kembali')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Status Peminjaman -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-stone-700 mb-1">Status Peminjaman</label>
+                <select name="status" id="status" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm bg-white">
+                    @php $currentStatus = strtolower($loan->status); @endphp
+                    <option value="Dipinjam" {{ (old('status', $currentStatus) == 'dipinjam') ? 'selected' : '' }}>Dipinjam</option>
+                    <option value="Dikembalikan" {{ (old('status', $currentStatus) == 'dikembalikan') ? 'selected' : '' }}>Dikembalikan</option>
+                    <option value="Terlambat" {{ (old('status', $currentStatus) == 'terlambat') ? 'selected' : '' }}>Terlambat</option>
+                </select>
+                @error('status')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Buku yang Dipinjam (Checkboxes dengan buku yang sudah terpilih sebelumnya) -->
+            <div>
+                <label class="block text-sm font-medium text-stone-700 mb-1">Buku yang Dipinjam</label>
+                <p class="text-xs text-stone-500 mb-2">Pilih buku yang termasuk dalam transaksi peminjaman ini.</p>
+                
+                @php
+                    // Mengambil ID buku yang sedang dipinjam pada transaksi ini
+                    $selectedBooks = old('books', isset($loan->loanItems) ? $loan->loanItems->pluck('book_id')->toArray() : []);
+                @endphp
+
+                <div class="max-h-60 overflow-y-auto rounded-xl border border-stone-300 p-4 space-y-2.5 bg-stone-50/50">
+                    @foreach($books as $book)
+                        <label class="flex items-center space-x-3 p-2 hover:bg-white rounded-lg transition cursor-pointer border border-transparent hover:border-stone-200">
+                            <input type="checkbox" name="books[]" value="{{ $book->id }}" 
+                                {{ in_array($book->id, $selectedBooks) ? 'checked' : '' }}
+                                class="rounded border-stone-300 text-[#1E4D3B] focus:ring-[#1E4D3B] h-4 w-4">
+                            <span class="text-sm text-stone-800 font-medium">{{ $book->judul }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-stone-200/70 text-stone-600 ml-auto">Stok: {{ $book->stok }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('books')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="pt-4 flex items-center justify-end gap-3">
+                <a href="{{ route('loans.index') }}" class="px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 font-medium hover:bg-stone-50 transition text-sm">
+                    Batal
+                </a>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#1E4D3B] text-white font-medium hover:bg-[#16382b] transition shadow-sm text-sm">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

@@ -1,75 +1,96 @@
-{{-- File: resources/views/books/edit.blade.php --}}
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Buku</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; max-width: 500px; }
-        label { display: block; margin-top: 12px; font-weight: bold; }
-        input, select { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
-        .error { color: #b91c1c; font-size: 14px; margin-top: 4px; }
-        .btn { margin-top: 20px; padding: 8px 16px; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <h1>Edit Buku</h1>
-    <p><a href="{{ route('books.index') }}">&larr; Kembali ke daftar buku</a></p>
+@extends('layouts.app')
 
-    <form action="{{ route('books.update', $book['id']) }}" method="POST">
-        @csrf
-        @method('PUT')
+@section('content')
+<div class="max-w-3xl mx-auto py-8 px-4 space-y-6">
+    <!-- Header & Tombol Kembali -->
+    <div>
+        <h1 class="text-2xl font-bold text-[#1E4D3B]">Edit Buku</h1>
+        <p class="text-stone-600 mt-1">Perbarui informasi data buku perpustakaan.</p>
+        <div class="mt-3">
+            <a href="{{ route('books.index') }}" class="inline-flex items-center text-sm font-medium text-[#1E4D3B] hover:underline">
+                ← Kembali ke daftar buku
+            </a>
+        </div>
+    </div>
 
-        <label for="judul">Judul</label>
-        <input type="text" name="judul" id="judul" value="{{ old('judul', $book['judul']) }}">
-        @error('judul')
-            <div class="error">{{ $message }}</div>
-        @enderror
+    <!-- Form Container -->
+    <div class="bg-white shadow-sm rounded-2xl border border-stone-200 overflow-hidden p-6 sm:p-8">
+        <form action="{{ route('books.update', $book->id) }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-        <label for="penulis">Penulis</label>
-        <input type="text" name="penulis" id="penulis" value="{{ old('penulis', $book['penulis']) }}">
-        @error('penulis')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Judul -->
+            <div>
+                <label for="judul" class="block text-sm font-medium text-stone-700 mb-1">Judul Buku</label>
+                <input type="text" name="judul" id="judul" value="{{ old('judul', $book->judul) }}" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                @error('judul')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <label for="penerbit">Penerbit</label>
-        <input type="text" name="penerbit" id="penerbit" value="{{ old('penerbit', $book['penerbit']) }}">
-        @error('penerbit')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Penulis -->
+            <div>
+                <label for="penulis" class="block text-sm font-medium text-stone-700 mb-1">Penulis</label>
+                <input type="text" name="penulis" id="penulis" value="{{ old('penulis', $book->penulis) }}" required
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                @error('penulis')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <label for="tahun_terbit">Tahun Terbit</label>
-        <input type="number" name="tahun_terbit" id="tahun_terbit" value="{{ old('tahun_terbit', $book['tahun_terbit']) }}">
-        @error('tahun_terbit')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Penerbit -->
+            <div>
+                <label for="penerbit" class="block text-sm font-medium text-stone-700 mb-1">Penerbit</label>
+                <input type="text" name="penerbit" id="penerbit" value="{{ old('penerbit', $book->penerbit) }}"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+            </div>
 
-        <label for="isbn">ISBN (opsional)</label>
-        <input type="text" name="isbn" id="isbn" value="{{ old('isbn', $book['isbn']) }}">
-        @error('isbn')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Tahun Terbit & Stok (Grid 2 Kolom) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="tahun_terbit" class="block text-sm font-medium text-stone-700 mb-1">Tahun Terbit</label>
+                    <input type="number" name="tahun_terbit" id="tahun_terbit" value="{{ old('tahun_terbit', $book->tahun_terbit) }}"
+                        class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                </div>
+                <div>
+                    <label for="stok" class="block text-sm font-medium text-stone-700 mb-1">Stok</label>
+                    <input type="number" name="stok" id="stok" value="{{ old('stok', $book->stok) }}" min="0" required
+                        class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+                </div>
+            </div>
 
-        <label for="stok">Stok</label>
-        <input type="number" name="stok" id="stok" value="{{ old('stok', $book['stok']) }}">
-        @error('stok')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- ISBN -->
+            <div>
+                <label for="isbn" class="block text-sm font-medium text-stone-700 mb-1">ISBN (Opsional)</label>
+                <input type="text" name="isbn" id="isbn" value="{{ old('isbn', $book->isbn) }}"
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm">
+            </div>
 
-        <label for="category_id">Kategori</label>
-        <select name="category_id" id="category_id">
-            <option value="">-- Pilih Kategori --</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category['id'] }}" @selected(old('category_id', $book['category_id']) == $category['id'])>
-                    {{ $category['nama_kategori'] }}
-                </option>
-            @endforeach
-        </select>
-        @error('category_id')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <!-- Kategori -->
+            <div>
+                <label for="category_id" class="block text-sm font-medium text-stone-700 mb-1">Kategori</label>
+                <select name="category_id" id="category_id" 
+                    class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1E4D3B] focus:border-transparent text-sm bg-white">
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ (old('category_id', $book->category_id) == $category->id) ? 'selected' : '' }}>
+                            {{ $category->nama_kategori }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-        <button type="submit" class="btn">Perbarui</button>
-    </form>
-</body>
-</html>
+            <!-- Tombol Aksi -->
+            <div class="pt-4 flex items-center justify-end gap-3">
+                <a href="{{ route('books.index') }}" class="px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 font-medium hover:bg-stone-50 transition text-sm">
+                    Batal
+                </a>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#1E4D3B] text-white font-medium hover:bg-[#16382b] transition shadow-sm text-sm">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

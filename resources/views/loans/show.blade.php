@@ -1,62 +1,73 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail Peminjaman</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; max-width: 600px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 16px; }
-        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
-        .info th { width: 160px; background: #f3f4f6; }
-    </style>
-</head>
-<body>
-    <h1>Detail Peminjaman</h1>
-    <p><a href="{{ route('loans.index') }}">&larr; Kembali ke daftar peminjaman</a></p>
+@extends('layouts.app') 
 
-    <table class="info">
-        <tr>
-            <th>Anggota</th>
-            <td>{{ $loan['member']['nama'] }} ({{ $loan['member']['nim'] }})</td>
-        </tr>
-        <tr>
-            <th>Petugas</th>
-            <td>{{ $loan['user']['name'] }}</td>
-        </tr>
-        <tr>
-            <th>Tanggal Pinjam</th>
-            <td>{{ $loan['tanggal_pinjam'] }}</td>
-        </tr>
-        <tr>
-            <th>Tanggal Kembali</th>
-            <td>{{ $loan['tanggal_kembali'] }}</td>
-        </tr>
-        <tr>
-            <th>Tanggal Dikembalikan</th>
-            <td>{{ $loan['tanggal_dikembalikan'] ?? '-' }}</td>
-        </tr>
-        <tr>
-            <th>Status</th>
-            <td>{{ ucfirst($loan['status']) }}</td>
-        </tr>
-    </table>
+@section('content')
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-stone-900">Detail Peminjaman</h1>
+        <a href="{{ route('loans.index') }}" class="text-sm text-emerald-600 hover:underline inline-block mt-1">
+            ← Kembali ke daftar peminjaman
+        </a>
+    </div>
 
-    <h2>Buku yang Dipinjam</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Judul</th>
-                <th>Penulis</th>
+    <!-- Informasi Utama -->
+    <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-stone-200 mb-8">
+        <table class="w-full text-left border-collapse">
+            <tr class="border-b border-stone-100">
+                <th class="py-3 px-4 bg-stone-50 font-medium text-stone-700 w-1/3">Anggota</th>
+                <td class="py-3 px-4 text-stone-900">{{ $loan->member->nama ?? '-' }} ({{ $loan->member->nim ?? '-' }})</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($loan['loanItems'] as $item)
-                <tr>
-                    <td>{{ $item['book']['judul'] }}</td>
-                    <td>{{ $item['book']['penulis'] }}</td>
+            <tr class="border-b border-stone-100">
+                <th class="py-3 px-4 bg-stone-50 font-medium text-stone-700">Petugas</th>
+                <td class="py-3 px-4 text-stone-900">{{ $loan->user->name ?? '-' }}</td>
+            </tr>
+            <tr class="border-b border-stone-100">
+                <th class="py-3 px-4 bg-stone-50 font-medium text-stone-700">Tanggal Pinjam</th>
+                <td class="py-3 px-4 text-stone-900">{{ $loan->tanggal_pinjam }}</td>
+            </tr>
+            <tr class="border-b border-stone-100">
+                <th class="py-3 px-4 bg-stone-50 font-medium text-stone-700">Tanggal Kembali</th>
+                <td class="py-3 px-4 text-stone-900">{{ $loan->tanggal_kembali }}</td>
+            </tr>
+            <tr class="border-b border-stone-100">
+                <th class="py-3 px-4 bg-stone-50 font-medium text-stone-700">Tanggal Dikembalikan</th>
+                <td class="py-3 px-4 text-stone-900">{{ $loan->tanggal_dikembalikan ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th class="py-3 px-4 bg-stone-50 font-medium text-stone-700">Status</th>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold 
+                        {{ $loan->status == 'terlambat' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800' }}">
+                        {{ ucfirst($loan->status) }}
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Tabel Buku yang Dipinjam -->
+    <h2 class="text-xl font-bold text-stone-900 mb-4">Buku yang Dipinjam</h2>
+    <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-stone-200">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-stone-50 border-b border-stone-200">
+                    <th class="py-3 px-4 font-semibold text-stone-700">Judul</th>
+                    <th class="py-3 px-4 font-semibold text-stone-700">Penulis</th>
                 </tr>
-            @endforeach
+            </thead>
+            <tbody>
+                @forelse($loan->loanItems as $item)
+                <tr class="border-b border-stone-100">
+                    <td class="py-3 px-4 text-stone-900">{{ $item->book->judul ?? '-' }}</td>
+                    <td class="py-3 px-4 text-stone-600">{{ $item->book->penulis ?? '-' }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="2" class="py-4 px-4 text-center text-stone-500">Tidak ada buku yang terlampir.</td>
+                </tr>
+            @endforelse
         </tbody>
-    </table>
-</body>
-</html>
+        </table>
+    </div>
+</div>
+@endsection
